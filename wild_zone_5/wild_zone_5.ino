@@ -9,7 +9,7 @@ uint8_t const desc_hid_report[] = {
     0x05, 0x01,        // Usage Page (Generic Desktop)
     0x09, 0x05,        // Usage (Gamepad)
     0xA1, 0x01,        // Collection (Application)
-    
+
     // 16 Buttons (2 bytes)
     0x05, 0x09,        //   Usage Page (Button)
     0x19, 0x01,        //   Usage Minimum (Button 1)
@@ -19,7 +19,7 @@ uint8_t const desc_hid_report[] = {
     0x75, 0x01,        //   Report Size (1 bit)
     0x95, 0x10,        //   Report Count (16 bits)
     0x81, 0x02,        //   Input (Data,Var,Abs)
-    
+
     // D-Pad Hat Switch (1 byte)
     0x05, 0x01,        //   Usage Page (Generic Desktop)
     0x09, 0x39,        //   Usage (Hat switch)
@@ -31,12 +31,12 @@ uint8_t const desc_hid_report[] = {
     0x75, 0x04,        //   Report Size (4 bits)
     0x95, 0x01,        //   Report Count (1)
     0x81, 0x42,        //   Input (Data,Var,Abs,Null)
-    
+
     // D-Pad Padding (4 bits)
     0x75, 0x04,        //   Report Size (4)
     0x95, 0x01,        //   Report Count (1)
     0x81, 0x03,        //   Input (Const,Var,Abs)
-    
+
     // Left Stick X and Y (2 bytes)
     0x05, 0x01,        //   Usage Page (Generic Desktop)
     0x09, 0x30,        //   Usage (X)
@@ -46,7 +46,7 @@ uint8_t const desc_hid_report[] = {
     0x75, 0x08,        //   Report Size (8)
     0x95, 0x02,        //   Report Count (2)
     0x81, 0x02,        //   Input (Data,Var,Abs)
-    
+
     // Right Stick X and Y (2 bytes) - KEEP AT CENTER
     0x09, 0x33,        //   Usage (Rx)
     0x09, 0x34,        //   Usage (Ry)
@@ -55,7 +55,7 @@ uint8_t const desc_hid_report[] = {
     0x75, 0x08,        //   Report Size (8)
     0x95, 0x02,        //   Report Count (2)
     0x81, 0x02,        //   Input (Data,Var,Abs)
-    
+
     0xC0               // End Collection
 };
 
@@ -101,8 +101,8 @@ Adafruit_USBD_HID usb_hid;
 
 // Send 8-byte report: [buttons(2)][dpad(1)][L-X][L-Y][R-X][R-Y][padding]
 void send_report(uint16_t buttons, uint8_t dpad, uint8_t lx, uint8_t ly) {
-  uint8_t report[8] = {0}; 
-  
+  uint8_t report[8] = {0};
+
   report[0] = buttons & 0xFF;
   report[1] = (buttons >> 8) & 0xFF;
   report[2] = dpad;
@@ -111,7 +111,7 @@ void send_report(uint16_t buttons, uint8_t dpad, uint8_t lx, uint8_t ly) {
   report[5] = STICK_CTR; // Right X centered
   report[6] = STICK_CTR; // Right Y centered
   report[7] = 0x00;
-  
+
   usb_hid.sendReport(0, report, sizeof(report));
 }
 
@@ -146,12 +146,12 @@ void setup() {
   // Initialize LED
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
-  
+
   // FORCE VID/PID to act as a POKKEN CONTROLLER
   USBDevice.setID(0x0f0d, 0x0092);
   USBDevice.setManufacturerDescriptor("HORI CO.,LTD.");
   USBDevice.setProductDescriptor("POKKEN CONTROLLER");
-  
+
   usb_hid.setPollInterval(2);
   usb_hid.setReportDescriptor(desc_hid_report, sizeof(desc_hid_report));
   usb_hid.setStringDescriptor("POKKEN CONTROLLER");
@@ -160,25 +160,25 @@ void setup() {
   // WAIT FOR SWITCH TO RECOGNIZE CONTROLLER
   while(!USBDevice.mounted()) delay(1);
   delay(500);
-  
+
   // Auto-register as Player 1
   pressButton(BTN_A, 100);
-  
+
   // CRITICAL DELAY: Wait 4 seconds for Switch to
   // finish registering before sending next command.
-  delay(4000); 
-  
+  delay(4000);
+
   // === AUTOMATE GAME LAUNCH ===
-  
-  // Press B (first time) to exit "Change Grip/Order"
+
+  // Press B (first time) - often doesn't register
   pressButton(BTN_B, 100);
   delay(2000);  // Wait for "Controllers" menu
-  
-  // Press B (second time) to exit "Controllers" menu
+
+  // Press B (second time) to exit "Change Grip/Order"
   pressButton(BTN_B, 100);
-  delay(2000);  // Wait for home screen to load
-  
-  // Press B (second time) to exit "Controllers" menu
+  delay(2000);  // Wait for "Controllers" menu
+
+  // Press B (third time) to exit "Controllers" menu and reach home screen
   pressButton(BTN_B, 100);
   delay(2000);  // Wait for home screen to load
 
@@ -190,11 +190,11 @@ void setup() {
   delay(500);
   pressDPad(DPAD_LEFT, 100);
   delay(500);
-  
+
   // Launch game
   pressButton(BTN_A, 100);
   delay(5000);  // Wait for game to start loading
-  
+
   // Macro starts NOW!
   digitalWrite(LED_BUILTIN, HIGH);
   delay(500); // <-- THIS IS THE FIXED LINE
@@ -217,27 +217,27 @@ void loop() {
   delay(500);
   pressButton(BTN_B, 100);
   delay(1000); // Wait for menus to close
-  
+
   // Open map
   pressButton(BTN_PLUS, 100);
   delay(2000);
-  
+
   // Reset stick
   resetStick();
   delay(1000);
-  
+
   // Navigate
   moveStick(150, STICK_UP, 200);
   resetStick();
   delay(300);
-  
+
   // Select
   pressButton(BTN_A, 100);
   delay(1000);
-  
+
   // Confirm
   pressButton(BTN_A, 100);
-  
+
   // Wait for fast travel
   delay(10000);
 }

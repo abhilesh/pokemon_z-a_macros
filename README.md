@@ -89,6 +89,18 @@ This script is "blind" and relies entirely on timing.
 
   - A: Your Switch is loading slower than the script expects. Increase the `delay()` values in the `loop()` or `setup()` function.
 
+## 🙏 Credits
+
+- Hardware: Raspberry Pi Pico by Raspberry Pi Ltd. — https://www.raspberrypi.com/products/raspberry-pi-pico/
+- IDE: Arduino IDE by Arduino — https://www.arduino.cc/en/software
+- Board core: arduino-pico by Earle F. Philhower, III — https://github.com/earlephilhower/arduino-pico
+- USB stack: Adafruit TinyUSB Library and TinyUSB (Hå Thạch, Adafruit) —
+  https://github.com/adafruit/Adafruit_TinyUSB_Arduino • https://github.com/hathach/tinyusb
+- HID spec: USB HID Usage Tables by USB-IF — https://usb.org/document-library/hid-usage-tables-15
+- Controller ID: HORI CO., LTD. "POKKÉN CONTROLLER" VID/PID used for Switch compatibility
+
+Trademarks: Nintendo Switch and Pokkén are trademarks of their respective owners. This project is not affiliated with or endorsed by Nintendo or HORI.
+
 ## ⚠️ Disclaimer
 
 **Educational purposes only.** Automation may violate Nintendo's Terms of Service. Use at your own risk. Not responsible for account bans, save data loss, or hardware damage.
