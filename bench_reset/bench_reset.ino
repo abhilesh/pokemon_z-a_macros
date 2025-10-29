@@ -221,7 +221,8 @@ void loop() {
   pressButton(BTN_A, 100);
   delay(700);
   pressButton(BTN_A, 100);
+  delay(1000);
 
   // Wait for reset
-  delay(23000); // Adjusted delay for reset
+  delay(5000); // Adjusted delay for reset
 }
